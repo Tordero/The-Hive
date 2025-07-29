@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Juego Hexagonal - Plantilla Phaser</title>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #1e1e1e;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+<script>
+  const config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    backgroundColor: '#2c3e50',
+    scene: {
+      preload,
+      create,
+      update
+    }
+  };
+
+  const HEX_SIZE = 40;
+  const HEX_HEIGHT = Math.sqrt(3) * HEX_SIZE;
+  const HEX_WIDTH = 2 * HEX_SIZE;
+  const HEX_VERT_SPACING = HEX_HEIGHT;
+  const HEX_HORIZ_SPACING = HEX_WIDTH * 3/4;
+
+  let game = new Phaser.Game(config);
+
+  function preload() {
+    this.load.image('hex', 'https://i.imgur.com/6XwX0uD.png'); // Imagen de hexágono transparente
+  }
+
+  function create() {
+    this.hexes = [];
+
+    const cols = 10;
+    const rows = 8;
+
+    for (let q = 0; q < cols; q++) {
+      for (let r = 0; r < rows; r++) {
+        let x = HEX_HORIZ_SPACING * q;
+        let y = HEX_HEIGHT * (r + 0.5 * (q % 2));
+        let hex = this.add.image(x + 100, y + 100, 'hex').setInteractive();
+        hex.setScale(0.3);
+        hex.q = q;
+        hex.r = r;
+        hex.on('pointerdown', () => {
+          console.log(`Clic en hexágono: Q=${q}, R=${r}`);
+          hex.setTint(0xffcc00); // Destaca la casilla
+        });
+        this.hexes.push(hex);
+      }
+    }
+  }
+
+  function update() {
+    // Aquí podrías agregar lógica por turno, animaciones, etc.
+  }
+</script>
+</body>
+</html>
