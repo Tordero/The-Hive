@@ -1,5 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
+  <body>
+    <script>
+  function login() {
+    const email = document.getElementById("email").value.trim();
+    const user = document.getElementById("username").value.trim();
+    const pass = document.getElementById("password").value.trim();
+
+    const validUser = "admin";
+    const validPass = "1234";
+    const validEmail = "ejemplo@correo.com";
+
+    if (user === validUser && pass === validPass && email === validEmail) {
+      document.getElementById("login-container").style.display = "none";
+      document.getElementById("game-container").style.display = "block";
+      startGame(); // inicia Phaser
+    } else {
+      document.getElementById("login-error").innerText = "Datos incorrectos. Intenta de nuevo.";
+    }
+  }
+
+  function startGame() {
+    const config = {
+      type: Phaser.AUTO,
+      width: 800,
+      height: 600,
+      parent: "game-container",
+      backgroundColor: '#2c3e50',
+      scene: {
+        preload,
+        create,
+        update
+      }
+    };
+
+    new Phaser.Game(config);
+  }
+
+  function preload() {
+    this.load.image('hex', 'https://i.imgur.com/6XwX0uD.png');
+  }
+
+  function create() {
+    const HEX_SIZE = 40;
+    const HEX_HEIGHT = Math.sqrt(3) * HEX_SIZE;
+    const HEX_WIDTH = 2 * HEX_SIZE;
+    const HEX_VERT_SPACING = HEX_HEIGHT;
+    const HEX_HORIZ_SPACING = HEX_WIDTH * 3/4;
+
+    for (let q = 0; q < 10; q++) {
+      for (let r = 0; r < 8; r++) {
+        let x = HEX_HORIZ_SPACING * q;
+        let y = HEX_HEIGHT * (r + 0.5 * (q % 2));
+        let hex = this.add.image(x + 100, y + 100, 'hex').setInteractive();
+        hex.setScale(0.3);
+        hex.on('pointerdown', () => {
+          hex.setTint(0xffcc00);
+        });
+      }
+    }
+  }
+
+  function update() {}
+</script>
+  <div id="login-container" style="text-align:center; padding-top: 100px; color:white;">
+    <h2>Acceso al juego</h2>
+    <input type="text" id="email" placeholder="Correo electrónico"><br><br>
+    <input type="text" id="username" placeholder="Usuario"><br><br>
+    <input type="password" id="password" placeholder="Contraseña"><br><br>
+    <button onclick="login()">Ingresar</button>
+    <p id="login-error" style="color:red;"></p>
+  </div>
+
+  <div id="game-container" style="display: none;"></div>
 <head>
   <meta charset="UTF-8" />
   <title>Juego Hexagonal - Plantilla Phaser</title>
